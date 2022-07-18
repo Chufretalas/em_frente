@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pra_frente_app/screens/activity_form.dart';
+import 'package:pra_frente_app/debug/debug_page.dart';
 import 'package:pra_frente_app/screens/activity_view.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pra Frente',
       theme: ThemeData.dark(),
-      home: ActivityForm(),
+      home: DebugForm(),
     );
   }
 }

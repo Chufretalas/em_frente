@@ -4,8 +4,8 @@ import 'package:pra_frente_app/models/db_datetime.dart';
 
 import '../db/activity_db_helper.dart';
 
-class ActivityForm extends StatelessWidget {
-  ActivityForm({Key? key}) : super(key: key);
+class DebugForm extends StatelessWidget {
+  DebugForm({Key? key}) : super(key: key);
 
   final TextEditingController _activityController = TextEditingController();
 
@@ -13,7 +13,7 @@ class ActivityForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New activity"),
+        title: Text("Debug form"),
         centerTitle: true,
       ),
       body: Column(

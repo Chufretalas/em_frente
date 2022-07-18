@@ -32,6 +32,7 @@ class ActivityDbHelper {
       path,
       version: 1,
       onCreate: _onCreate,
+      onConfigure: _onConfigure,
     );
   }
 
@@ -49,9 +50,13 @@ class ActivityDbHelper {
         $tableDDate TEXT,
         $tableDForeign INTEGER,
         $tableDUnique TEXT UNIQUE,
-        FOREIGN KEY ($tableDForeign) REFERENCES $tableA ($tableAId) ON DELETE CASCADE 
+	      FOREIGN KEY("$tableDForeign") REFERENCES $tableA ("$tableAId")ON DELETE CASCADE
       )
     '''); //TODO: Foreign key relation not working
+  }
+
+  Future _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 
   Future<int> addActivity(Activity activity) async {
