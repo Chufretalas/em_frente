@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:pra_frente_app/exceptions/database_query_exception.dart';
+import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/activity.dart';
@@ -20,6 +21,7 @@ class ActivityDbHelper {
   static const String tableDId = 'date_id';
   static const String tableDDate = 'date_date';
   static const String tableDForeign = 'date_activity';
+  static const String tableDUnique = 'date_unique';
 
   Future<Database> get database async => _database ??= await _initDatabase();
 
@@ -37,7 +39,7 @@ class ActivityDbHelper {
     await db.execute('''
       CREATE TABLE $tableA(
         $tableAId INTEGER PRIMARY KEY,
-        $tableAName TEXT
+        $tableAName TEXT UNIQUE
       )
     ''');
 
@@ -46,9 +48,10 @@ class ActivityDbHelper {
         $tableDId INTEGER PRIMARY KEY,
         $tableDDate TEXT,
         $tableDForeign INTEGER,
-        FOREIGN KEY ($tableDForeign) REFERENCES $tableA($tableAId) ON DELETE CASCADE
+        $tableDUnique TEXT UNIQUE,
+        FOREIGN KEY ($tableDForeign) REFERENCES $tableA ($tableAId) ON DELETE CASCADE 
       )
-    ''');
+    '''); //TODO: Foreign key relation not working
   }
 
   Future<int> addActivity(Activity activity) async {
@@ -56,21 +59,27 @@ class ActivityDbHelper {
     return await db.insert(
       tableA,
       activity.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
-  Future<int> delete(int id) async {
+  Future<int> deleteActivity(int id) async {
     Database db = await instance.database;
-    return await db.delete(tableA, where: 'id = ?', whereArgs: [id]);
+    return await db.delete(tableA, where: '$tableAId = ?', whereArgs: [id]);
   }
 
   Future<Activity> getOneActivity(int id) async {
     Database db = await instance.database;
-    final List<Map<String, dynamic>> map = await db.query("""
-      SELECT * FROM $tableA WHERE $tableAId = $id;
-    """);
-    final Activity activity = Activity(id: map.first[tableAId], name: map.first[tableAName]);
+    final List<Map<String, dynamic>> map =
+        await db.query(tableA, where: "$tableAId = ?", whereArgs: [id]);
+
+    if (map.isEmpty) {
+      throw DatabaseQueryException("No Activity found for id = $id");
+    }
+
+    final Activity activity =
+        Activity(id: map.first[tableAId], name: map.first[tableAName]);
+
     return activity;
   }
 
@@ -92,4 +101,27 @@ class ActivityDbHelper {
 //       where: 'id = ?', whereArgs: [note.id]);
 // } //TODO: figure out how to implement this without breaking everything
 
+  // ========================== Date related commands ========================== //
+
+  Future<int> addDate({required DbDatetime date}) async {
+    Database db = await instance.database;
+    return await db.insert(
+      tableD,
+      date.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
+
+  Future<List<DbDatetime>> getAllDates() async {
+    Database db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(tableD);
+
+    return List.generate(maps.length, (i) {
+      return DbDatetime(
+        dateId: maps[i][tableDId],
+        date: DateTime.parse(maps[i][tableDDate]),
+        activityId: maps[i][tableDForeign],
+      );
+    });
+  }
 }
