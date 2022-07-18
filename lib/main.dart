@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pra Frente',
       theme: ThemeData.dark(),
-      home: DebugForm(),
+      home: ActivityView(),
     );
   }
 }
