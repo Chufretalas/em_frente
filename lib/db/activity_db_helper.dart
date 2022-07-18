@@ -52,7 +52,7 @@ class ActivityDbHelper {
         $tableDUnique TEXT UNIQUE,
 	      FOREIGN KEY("$tableDForeign") REFERENCES $tableA ("$tableAId")ON DELETE CASCADE
       )
-    '''); //TODO: Foreign key relation not working
+    ''');
   }
 
   Future _onConfigure(Database db) async {
@@ -99,12 +99,6 @@ class ActivityDbHelper {
       );
     });
   }
-
-// Future<int> update(Activity activity) async {
-//   Database db = await instance.database;
-//   return await db.update(table, note.toMap(),
-//       where: 'id = ?', whereArgs: [note.id]);
-// } //TODO: figure out how to implement this without breaking everything
 
   // ========================== Date related commands ========================== //
 

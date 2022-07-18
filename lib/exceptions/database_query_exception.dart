@@ -5,12 +5,10 @@ class DatabaseQueryException extends DatabaseException {
 
   @override
   int? getResultCode() {
-    // TODO: implement getResultCode
     throw UnimplementedError();
   }
 
   @override
-  // TODO: implement result
   Object? get result => throw UnimplementedError();
 
 }

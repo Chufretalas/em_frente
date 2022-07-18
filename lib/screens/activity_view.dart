@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/db/activity_db_helper.dart';
 import 'package:pra_frente_app/models/activity.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:pra_frente_app/screens/activity_form.dart';
 
 class ActivityView extends StatefulWidget {
   const ActivityView({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _ActivityViewState extends State<ActivityView> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return Expanded(
+                  return const Expanded(
                     child: Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -53,7 +53,7 @@ class _ActivityViewState extends State<ActivityView> {
                         }),
                   );
                 default:
-                  return Center(
+                  return const Center(
                     child: Text("Unknown error"),
                   );
               }
@@ -62,10 +62,12 @@ class _ActivityViewState extends State<ActivityView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () async {
-          String path = await getDatabasesPath();
-          debugPrint(path);
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ActivityForm(),
+          ));
+          setState(() {});
         },
       ),
     );
