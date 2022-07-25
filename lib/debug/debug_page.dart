@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pra_frente_app/debug/print_all_dates_by_activity.dart';
 import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
 
 import '../db/activity_db_helper.dart';
 
-class DebugForm extends StatelessWidget {
-  DebugForm({Key? key}) : super(key: key);
+class DebugPage extends StatelessWidget {
+  DebugPage({Key? key}) : super(key: key);
 
   final TextEditingController _activityController = TextEditingController();
 
@@ -56,8 +57,8 @@ class DebugForm extends StatelessWidget {
             onPressed: () async {
               int result = await ActivityDbHelper.instance.addDate(
                 date: DbDatetime(
-                  date: DateTime.fromMillisecondsSinceEpoch(1658109924000),
-                  activityId: 1,
+                  date: DateTime.now(),
+                  activityId: 4,
                 ),
               );
               print(result);
@@ -69,6 +70,12 @@ class DebugForm extends StatelessWidget {
               final List<DbDatetime> allDates =
                   await ActivityDbHelper.instance.getAllDates();
               debugPrint(allDates.toString());
+            },
+          ),
+          ElevatedButton(
+            child: Text("Get all dates by activity"),
+            onPressed: () async {
+              printAllDatesByActivity(2);
             },
           ),
         ],

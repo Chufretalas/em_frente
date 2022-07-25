@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:pra_frente_app/exceptions/database_query_exception.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
@@ -109,6 +110,23 @@ class ActivityDbHelper {
       date.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+  }
+
+  Future<List<DbDatetime>> getAllDatesByActivity(int activityId) async {
+    Database db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableD,
+      where: "$tableDForeign = ?",
+      whereArgs: [activityId],
+    );
+
+    return List.generate(maps.length, (i) {
+      return DbDatetime(
+        dateId: maps[i][tableDId],
+        date: DateTime.parse(maps[i][tableDDate]),
+        activityId: maps[i][tableDForeign],
+      );
+    });
   }
 
   Future<List<DbDatetime>> getAllDates() async {

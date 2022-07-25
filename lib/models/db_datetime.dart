@@ -1,5 +1,7 @@
 //Model for the dates stored in the database
 
+import 'package:pra_frente_app/utils/zero_out_time.dart';
+
 import '../db/activity_db_helper.dart';
 
 class DbDatetime {
@@ -9,8 +11,7 @@ class DbDatetime {
   late final String uniqueKey; //unique key to check for same date and activity
 
   DbDatetime({this.dateId, required DateTime date, required this.activityId}) {
-    DateTime zeroedDate = DateTime(date.year, date.month,
-        date.day);
+    DateTime zeroedDate = zeroOutTime(date);
     this.date = zeroedDate; // zeroes out the time, so it is easier to work with in the DB
     this.uniqueKey = "${zeroedDate.toIso8601String()} || ${this.activityId.toString()}";
   }
