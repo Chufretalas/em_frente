@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/db/activity_db_helper.dart';
-import 'package:pra_frente_app/exceptions/database_query_exception.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../models/activity.dart';
 

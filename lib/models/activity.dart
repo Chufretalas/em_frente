@@ -18,16 +18,7 @@ class Activity {
     }
   }
 
-  void _getDaysFromDb() async {
-    daysDone = await ActivityDbHelper.instance.getAllDatesByActivity(id!);
-    setDoneToday();
-  }
-
-  Activity({this.id, required this.name}) {
-    if (id != null) {
-      _getDaysFromDb();
-    }
-  }
+  Activity({this.id, required this.name});
 
   @override
   String toString() {

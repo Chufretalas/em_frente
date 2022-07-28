@@ -57,8 +57,8 @@ class DebugPage extends StatelessWidget {
             onPressed: () async {
               int result = await ActivityDbHelper.instance.addDate(
                 date: DbDatetime(
-                  date: DateTime.now(),
-                  activityId: 4,
+                  date: DateTime(2018, 06, 22),
+                  activityId: 3,
                 ),
               );
               print(result);
