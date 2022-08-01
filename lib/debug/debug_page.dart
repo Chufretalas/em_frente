@@ -14,7 +14,7 @@ class DebugPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Debug form"),
+        title: Text("Debug page"),
         centerTitle: true,
       ),
       body: Column(
@@ -57,8 +57,8 @@ class DebugPage extends StatelessWidget {
             onPressed: () async {
               int result = await ActivityDbHelper.instance.addDate(
                 date: DbDatetime(
-                  date: DateTime(2018, 06, 22),
-                  activityId: 3,
+                  date: DateTime.now(),
+                  activityId: 4,
                 ),
               );
               print(result);

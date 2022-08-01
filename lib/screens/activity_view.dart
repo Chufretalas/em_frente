@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/db/activity_db_helper.dart';
+import 'package:pra_frente_app/debug/debug_page.dart';
 import 'package:pra_frente_app/debug/print_all_dates_by_activity.dart';
 import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
+import 'package:pra_frente_app/components/delete_confirmation_dialog.dart';
 
 class ActivityView extends StatefulWidget {
   const ActivityView({Key? key}) : super(key: key);
@@ -13,13 +15,24 @@ class ActivityView extends StatefulWidget {
   State<ActivityView> createState() => _ActivityViewState();
 }
 
-class _ActivityViewState extends State<ActivityView>{
+class _ActivityViewState extends State<ActivityView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Activities"),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              child: Icon(Icons.bug_report),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => DebugPage()))
+                  .then((value) => setState(() {})),
+            ),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -44,13 +57,24 @@ class _ActivityViewState extends State<ActivityView>{
                             color:
                                 activity.doneToday ? Colors.green : Colors.red,
                             child: ListTile(
-                              //TODO: Add an update name option
+                              //TODO: Add an update name action
                               title: Text(
                                   "${activity.name} ${activity.daysDone.length}"),
                               onLongPress: () async {
-                                //TODO: Add a delete feature with an alert dialog
-                                // await ActivityDbHelper.instance.delete(activity.id!);
-                                // setState(() {});
+                                var response = await showDialog(
+                                  context: context,
+                                  builder: (dialogContext) =>
+                                      DeleteConfirmationDialog(
+                                    title: "Delete activity",
+                                    description:
+                                        "This action cannot be undone, are you sure?",
+                                  ),
+                                );
+                                if (response is bool && response == true) {
+                                  ActivityDbHelper.instance
+                                      .deleteActivity(activity.id!);
+                                }
+                                setState(() {});
                               },
                               onTap: () {
                                 //TODO: this has put on and remove todays date on each tap
@@ -84,8 +108,9 @@ class _ActivityViewState extends State<ActivityView>{
 
   Future<List<Activity>> _fetchActivitiesAndDates() async {
     List<Activity> actvivites = await ActivityDbHelper.instance.getActivities();
-    for(Activity activity in actvivites) {
-      activity.daysDone = await ActivityDbHelper.instance.getAllDatesByActivity(activity.id!);
+    for (Activity activity in actvivites) {
+      activity.daysDone =
+          await ActivityDbHelper.instance.getAllDatesByActivity(activity.id!);
       activity.setDoneToday();
     }
     return actvivites;
