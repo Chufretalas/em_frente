@@ -58,7 +58,7 @@ class DebugPage extends StatelessWidget {
               int result = await ActivityDbHelper.instance.addDate(
                 date: DbDatetime(
                   date: DateTime.now(),
-                  activityId: 4,
+                  activityId: 5,
                 ),
               );
               print(result);
@@ -76,6 +76,15 @@ class DebugPage extends StatelessWidget {
             child: Text("Get all dates by activity"),
             onPressed: () async {
               printAllDatesByActivity(2);
+            },
+          ),
+          ElevatedButton(
+            child: Text("Toggle date"),
+            onPressed: () async {
+              var result = await ActivityDbHelper.instance.toggleDate(
+                dbDatetime: DbDatetime(date: DateTime.now(), activityId: 5),
+              );
+              print(result);
             },
           ),
         ],

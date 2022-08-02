@@ -5,6 +5,7 @@ import 'package:pra_frente_app/db/activity_db_helper.dart';
 import 'package:pra_frente_app/debug/debug_page.dart';
 import 'package:pra_frente_app/debug/print_all_dates_by_activity.dart';
 import 'package:pra_frente_app/models/activity.dart';
+import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
 import 'package:pra_frente_app/components/delete_confirmation_dialog.dart';
 
@@ -76,10 +77,14 @@ class _ActivityViewState extends State<ActivityView> {
                                 }
                                 setState(() {});
                               },
-                              onTap: () {
-                                //TODO: this has put on and remove todays date on each tap
-                                printAllDatesByActivity(activity.id!);
-                                print(activity.doneToday);
+                              onTap: () async {
+                                await ActivityDbHelper.instance.toggleDate(
+                                  dbDatetime: DbDatetime(
+                                    date: DateTime.now(),
+                                    activityId: activity.id!,
+                                  ),
+                                );
+                                setState((){});
                               },
                             ),
                           );

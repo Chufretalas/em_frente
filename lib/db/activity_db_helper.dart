@@ -141,4 +141,18 @@ class ActivityDbHelper {
       );
     });
   }
+
+  toggleDate({required DbDatetime dbDatetime}) async {
+    Database db = await instance.database;
+    int result = await db.delete(
+      tableD,
+      where: "$tableDForeign = ? AND $tableDDate = ?",
+      whereArgs: [dbDatetime.activityId, dbDatetime.date.toIso8601String()],
+    );
+    if(result == 0) { // If the delete fails it means the date does not exist, so it gets added
+      return await addDate(date: dbDatetime);
+    } else {
+      return result;
+    }
+  }
 }
