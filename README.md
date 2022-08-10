@@ -1,16 +1,5 @@
-# pra_frente_app
+# EM FRENTE
 
-A flutter app that helps you maintain progress
+A flutter app that helps you maintain progress by tracking how many days you are able to do a task.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## this is not the proper README, I'll do a decent one when I manage to finish the first release
