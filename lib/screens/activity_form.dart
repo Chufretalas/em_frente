@@ -6,17 +6,35 @@ import '../models/activity.dart';
 class ActivityForm extends StatefulWidget {
   ActivityForm({Key? key}) : super(key: key);
 
+  ActivityForm.editMode({Key? key, required this.editActivity})
+      : super(key: key);
+
+  Activity? editActivity;
+
   @override
-  State<ActivityForm> createState() => _ActivityFormState();
+  State<ActivityForm> createState() => _ActivityFormState(editActivity);
 }
 
 class _ActivityFormState extends State<ActivityForm> {
+  String _appBarTitle = "New activity";
   final TextEditingController _activityController = TextEditingController();
   bool _errorVisibility = false;
   String _errorMessage = "An error has occured";
+  String _saveErrorMessage = "Error while trying to save the new activity";
+
+  Activity? editActivity;
+
+  _ActivityFormState(this.editActivity) {
+    //Set edit mode
+    if (editActivity != null) {
+      _appBarTitle = "Edit activity";
+      _activityController.text = editActivity!.name;
+      _saveErrorMessage = "Error while trying to save the changes";
+    }
+  }
 
   void _hideError() {
-    bool _errorVisibility = false;
+    _errorVisibility = false;
     setState(() {});
   }
 
@@ -30,7 +48,7 @@ class _ActivityFormState extends State<ActivityForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New activity"),
+        title: Text(_appBarTitle),
         centerTitle: true,
       ),
       body: Column(
@@ -43,17 +61,26 @@ class _ActivityFormState extends State<ActivityForm> {
                 style: TextStyle(color: Colors.redAccent),
               )),
           ElevatedButton(
-            child: Text("Add activity"),
+            child: const Text("Confirm"),
             onPressed: () async {
               _hideError();
               if (_activityController.text.isNotEmpty) {
                 try {
-                  await ActivityDbHelper.instance
-                      .addActivity(Activity(name: _activityController.text));
+                  if (editActivity != null) {
+                    editActivity!.name = _activityController.text;
+                    await ActivityDbHelper.instance
+                        .updateActivity(editActivity!);
+                  } else {
+                    await ActivityDbHelper.instance
+                        .addActivity(Activity(name: _activityController.text));
+                  }
                   Navigator.of(context).pop();
-                } catch (_) {
-                  _showError(
-                      errorMsg: "Error while trying to save the new activity");
+                } catch (e) {
+                  if (e.toString().contains("UNIQUE constraint failed")) {
+                    _showError(errorMsg: "This activity already exists");
+                  } else {
+                    _showError(errorMsg: _saveErrorMessage);
+                  }
                 }
               } else {
                 _showError(errorMsg: "The activity name cannot be empty");

@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pra_frente_app/components/delete_confirmation_dialog.dart';
 import 'package:pra_frente_app/db/activity_db_helper.dart';
 import 'package:pra_frente_app/debug/debug_page.dart';
-import 'package:pra_frente_app/debug/print_all_dates_by_activity.dart';
 import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
-import 'package:pra_frente_app/components/delete_confirmation_dialog.dart';
 
 class ActivityView extends StatefulWidget {
   const ActivityView({Key? key}) : super(key: key);
@@ -58,7 +57,6 @@ class _ActivityViewState extends State<ActivityView> {
                             color:
                                 activity.doneToday ? Colors.green : Colors.red,
                             child: ListTile(
-                              //TODO: Add an update name action
                               title: Text(
                                   "${activity.name} ${activity.daysDone.length}"),
                               onLongPress: () async {
@@ -84,8 +82,24 @@ class _ActivityViewState extends State<ActivityView> {
                                     activityId: activity.id!,
                                   ),
                                 );
-                                setState((){});
+                                setState(() {});
                               },
+                              trailing: InkWell(
+                                child: GestureDetector(
+                                  child: Icon(Icons.edit),
+                                  onTap: () async {
+                                    await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ActivityForm.editMode(
+                                          editActivity: activity,
+                                        ),
+                                      ),
+                                    );
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
                             ),
                           );
                         }),

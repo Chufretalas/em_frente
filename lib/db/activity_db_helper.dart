@@ -65,7 +65,7 @@ class ActivityDbHelper {
     return await db.insert(
       tableA,
       activity.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.ignore,
+      conflictAlgorithm: ConflictAlgorithm.fail,
     );
   }
 
@@ -99,6 +99,16 @@ class ActivityDbHelper {
         name: maps[i][tableAName],
       );
     });
+  }
+
+  Future<int> updateActivity(Activity activity) async {
+    Database db = await instance.database;
+    return await db.update(
+      tableA,
+      activity.toMap(),
+      where: '$tableAId = ?',
+      whereArgs: [activity.id],
+    );
   }
 
   // ========================== Date related commands ========================== //
@@ -149,7 +159,8 @@ class ActivityDbHelper {
       where: "$tableDForeign = ? AND $tableDDate = ?",
       whereArgs: [dbDatetime.activityId, dbDatetime.date.toIso8601String()],
     );
-    if(result == 0) { // If the delete fails it means the date does not exist, so it gets added
+    if (result == 0) {
+      // If the delete fails it means the date does not exist, so it gets added
       return await addDate(date: dbDatetime);
     } else {
       return result;
