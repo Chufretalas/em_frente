@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/debug/debug_page.dart';
 import 'package:pra_frente_app/screens/activity_view.dart';
+import 'package:pra_frente_app/screens/calendar_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Em Frente',
       theme: ThemeData.dark(),
-      home: ActivityView(),
+      home: CalendarView(),
     );
   }
 }
