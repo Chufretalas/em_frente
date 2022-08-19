@@ -8,130 +8,66 @@ import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
 
-class ActivityView extends StatefulWidget {
-  const ActivityView({Key? key}) : super(key: key);
+class ActivityView extends StatelessWidget {
 
-  @override
-  State<ActivityView> createState() => _ActivityViewState();
-}
+  final List<Activity> activities;
+  final Function onChange;
 
-class _ActivityViewState extends State<ActivityView> {
+  const ActivityView({Key? key, required this.activities, required this.onChange})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Activities"),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              child: Icon(Icons.bug_report),
-              onTap: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => DebugPage()))
-                  .then((value) => setState(() {})),
-            ),
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          FutureBuilder(
-            future: _fetchActivitiesAndDates(),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
+    return Expanded(
+      child: ListView.builder(
+          itemCount: activities.length,
+          itemBuilder: (context, index) {
+            final Activity activity = activities[index];
+            return Card(
+              color: activity.doneToday ? Colors.green : Colors.red,
+              child: ListTile(
+                title: Text("${activity.name} ${activity.daysDone.length}"),
+                onLongPress: () async {
+                  var response = await showDialog(
+                    context: context,
+                    builder: (dialogContext) => DeleteConfirmationDialog(
+                      title: "Delete activity",
+                      description:
+                          "This action cannot be undone, are you sure?",
                     ),
                   );
-                case ConnectionState.done:
-                  List<Activity> activities = snapshot.data as List<Activity>;
-                  return Expanded(
-                    child: ListView.builder(
-                        itemCount: activities.length,
-                        itemBuilder: (context, index) {
-                          final Activity activity = activities[index];
-                          return Card(
-                            color:
-                                activity.doneToday ? Colors.green : Colors.red,
-                            child: ListTile(
-                              title: Text(
-                                  "${activity.name} ${activity.daysDone.length}"),
-                              onLongPress: () async {
-                                var response = await showDialog(
-                                  context: context,
-                                  builder: (dialogContext) =>
-                                      DeleteConfirmationDialog(
-                                    title: "Delete activity",
-                                    description:
-                                        "This action cannot be undone, are you sure?",
-                                  ),
-                                );
-                                if (response is bool && response == true) {
-                                  ActivityDbHelper.instance
-                                      .deleteActivity(activity.id!);
-                                }
-                                setState(() {});
-                              },
-                              onTap: () async {
-                                await ActivityDbHelper.instance.toggleDate(
-                                  dbDatetime: DbDatetime(
-                                    date: DateTime.now(),
-                                    activityId: activity.id!,
-                                  ),
-                                );
-                                setState(() {});
-                              },
-                              trailing: InkWell(
-                                child: GestureDetector(
-                                  child: Icon(Icons.edit),
-                                  onTap: () async {
-                                    await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ActivityForm.editMode(
-                                          editActivity: activity,
-                                        ),
-                                      ),
-                                    );
-                                    setState(() {});
-                                  },
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
+                  if (response is bool && response == true) {
+                    ActivityDbHelper.instance.deleteActivity(activity.id!);
+                  }
+                  onChange();
+                },
+                onTap: () async {
+                  await ActivityDbHelper.instance.toggleDate(
+                    dbDatetime: DbDatetime(
+                      date: DateTime.now(),
+                      activityId: activity.id!,
+                    ),
                   );
-                default:
-                  return const Center(
-                    child: Text("Unknown error"),
-                  );
-              }
-            },
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ActivityForm(),
-          ));
-          setState(() {});
-        },
-      ),
+                  onChange();
+                },
+                trailing: InkWell(
+                  child: GestureDetector(
+                    child: Icon(Icons.edit),
+                    onTap: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ActivityForm.editMode(
+                            editActivity: activity,
+                          ),
+                        ),
+                      );
+                      onChange();
+                    },
+                  ),
+                ),
+              ),
+            );
+          }),
     );
-  }
-
-  Future<List<Activity>> _fetchActivitiesAndDates() async {
-    List<Activity> actvivites = await ActivityDbHelper.instance.getActivities();
-    for (Activity activity in actvivites) {
-      activity.daysDone =
-          await ActivityDbHelper.instance.getAllDatesByActivity(activity.id!);
-      activity.setDoneToday();
-    }
-    return actvivites;
   }
 }
