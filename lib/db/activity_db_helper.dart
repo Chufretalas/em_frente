@@ -89,7 +89,7 @@ class ActivityDbHelper {
     return activity;
   }
 
-  Future<List<Activity>> getActivities() async {
+  Future<List<Activity>> getAllActivities() async {
     Database db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(tableA);
 
@@ -111,7 +111,7 @@ class ActivityDbHelper {
     );
   }
 
-  // ========================== Date related commands ========================== //
+  // ========================== Date related methods ========================== //
 
   Future<int> addDate({required DbDatetime date}) async {
     Database db = await instance.database;

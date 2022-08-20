@@ -19,7 +19,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( //TODO: Botton navigation bar to calendar and activity view
       appBar: AppBar(
         title: Text("Activities"),
         centerTitle: true,
@@ -75,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<List<Activity>> _fetchActivitiesAndDates() async {
-    List<Activity> actvivites = await ActivityDbHelper.instance.getActivities();
+    List<Activity> actvivites = await ActivityDbHelper.instance.getAllActivities();
     for (Activity activity in actvivites) {
       activity.daysDone =
           await ActivityDbHelper.instance.getAllDatesByActivity(activity.id!);

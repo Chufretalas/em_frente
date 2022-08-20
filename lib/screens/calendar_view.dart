@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pra_frente_app/db/activity_db_helper.dart';
+import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/utils/zero_out_time.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../models/activity.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({Key? key}) : super(key: key);
@@ -10,9 +14,12 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
+  //TODO: make a CompletedCalendarCard component
+
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
 
+  //TODO: get the activites from the main screen and convert them to Map<DateTime, List<Activity>>
   Map<DateTime, List<Text>> _activitesExample = {
     zeroOutTime(DateTime.now()): [
       Text("oi"),
@@ -31,6 +38,12 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: GestureDetector(
+          child: Text("debug"),
+          onTap: () => _fetchAllActivitiesByDate(),
+        ),
+      ),
       body: TableCalendar(
         calendarStyle: CalendarStyle(
             markerDecoration:
@@ -41,6 +54,7 @@ class _CalendarViewState extends State<CalendarView> {
         selectedDayPredicate: (day) {
           return isSameDay(_selectedDay, day);
         },
+        //TODO: onDaySelected should show a list of the activities completed that day below the calendar (CompletedCalendarCard)
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
             isSameDay(selectedDay, _selectedDay)
@@ -58,5 +72,29 @@ class _CalendarViewState extends State<CalendarView> {
 
   List<Text> _getActivitiesByDay(DateTime day) {
     return _activitesExample[day] ?? [];
+  }
+
+  Future<Map<DateTime, List<Activity>>>  _fetchAllActivitiesByDate() async {
+    List<DbDatetime> allDates = await ActivityDbHelper.instance.getAllDates();
+    List<Activity> allActivities =
+        await ActivityDbHelper.instance.getAllActivities();
+    Set<DateTime> uniqueDates = allDates.map((e) => e.date).toSet();
+    Map<DateTime, List<Activity>> dateToActivities = {};
+
+    for (DateTime uniqueDate in uniqueDates) {
+
+      List<int> activitiesIdsOnThatDate = allDates
+          .where((dbDate) => dbDate.date == uniqueDate)
+          .map((filteredDbDate) => filteredDbDate.activityId)
+          .toList();
+
+      List<Activity> activitiesOnThatDate = allActivities
+          .where((activity) => activitiesIdsOnThatDate.contains(activity.id))
+          .toList();
+
+      dateToActivities.addAll({uniqueDate: activitiesOnThatDate});
+    }
+    print(dateToActivities);
+    return dateToActivities;
   }
 }

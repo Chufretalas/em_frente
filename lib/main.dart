@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Em Frente',
       theme: ThemeData.dark(),
-      home: MainScreen(),
+      home: CalendarView(),
     );
   }
 }

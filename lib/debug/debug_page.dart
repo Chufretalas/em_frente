@@ -34,7 +34,7 @@ class DebugPage extends StatelessWidget {
             child: Text("Get all activities"),
             onPressed: () async {
               final List<Activity> allActivities =
-                  await ActivityDbHelper.instance.getActivities();
+                  await ActivityDbHelper.instance.getAllActivities();
               debugPrint(allActivities.toString());
             },
           ),
