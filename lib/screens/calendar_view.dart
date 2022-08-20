@@ -15,34 +15,19 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
-  //TODO: make a CompletedCalendarCard component
 
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = zeroOutTime(DateTime.now());
+  DateTime _selectedDay = zeroOutTime(DateTime.now());
+  late List<CompleteCalendarCard> _selectedActivities;
 
-  //TODO: get the activites from the main screen and convert them to Map<DateTime, List<Activity>>
-  Map<DateTime, List<Text>> _activitesExample = {
-    zeroOutTime(DateTime.now()): [
-      Text("oi"),
-      Text("oi"),
-      Text("oi"),
-    ],
-    DateTime.utc(2022, 8, 1): [
-      Text("oi"),
-      Text("oi"),
-    ],
-    DateTime.utc(2022, 8, 10): [
-      Text("oi"),
-    ],
-  };
+  //TODO: manage the two future builders when integration the two views
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-          child: Text("debug"),
-          onTap: () => _fetchAllActivitiesByDate(),
+          child: Text("calendario"),
         ),
       ),
       body: Column(
@@ -61,29 +46,49 @@ class _CalendarViewState extends State<CalendarView> {
                 case ConnectionState.done:
                   Map<DateTime, List<Activity>> calendarActivites =
                       snapshot.data as Map<DateTime, List<Activity>>;
-                  return TableCalendar(
-                    calendarStyle: CalendarStyle(
-                        markerDecoration: BoxDecoration(
-                            color: Colors.red, shape: BoxShape.circle)),
-                    firstDay: DateTime.utc(2010, 10, 16),
-                    lastDay: DateTime.utc(2030, 3, 14),
-                    focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                    },
-                    //TODO: onDaySelected should show a list of the activities completed that day below the calendar (CompletedCalendarCard)
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        isSameDay(selectedDay, _selectedDay)
-                            ? _selectedDay = DateTime.now()
-                            : _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                      });
-                    },
-                    eventLoader: (day) {
-                      return _getActivitiesByDay(day, calendarActivites);
-                    },
+                  _selectedActivities =
+                      _getActivitiesByDay(_selectedDay, calendarActivites);
+
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        TableCalendar(
+                          calendarStyle: CalendarStyle(
+                              markerDecoration: BoxDecoration(
+                                  color: Colors.red, shape: BoxShape.circle)),
+                          firstDay: DateTime.utc(2010, 10, 16),
+                          lastDay: DateTime.utc(2030, 3, 14),
+                          focusedDay: _focusedDay,
+                          selectedDayPredicate: (day) {
+                            return isSameDay(_selectedDay, day);
+                          },
+                          onDaySelected: (selectedDay, focusedDay) {
+                            setState(() {
+                              isSameDay(selectedDay, _selectedDay)
+                                  ? _selectedDay = DateTime.now()
+                                  : _selectedDay = selectedDay;
+                              _focusedDay = focusedDay;
+                            });
+                          },
+                          eventLoader: (day) {
+                            return _getActivitiesByDay(day, calendarActivites);
+                          },
+                        ),
+                        _selectedActivities.isNotEmpty
+                            ? ListView.builder( //TODO: if the list is too big the scrolling breaks
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: _selectedActivities.length,
+                                itemBuilder: (context, index) {
+                                  return _selectedActivities[index];
+                                },
+                              )
+                            : Center(
+                                child: Text("Nothing was completed that day")),
+                      ],
+                    ),
                   );
+
                 default:
                   return const Expanded(
                     child: Center(
@@ -98,11 +103,11 @@ class _CalendarViewState extends State<CalendarView> {
     );
   }
 
-  List<CompleteCalenderCard> _getActivitiesByDay(
+  List<CompleteCalendarCard> _getActivitiesByDay(
       DateTime day, Map<DateTime, List<Activity>> data) {
     List<Activity> activities = data[zeroOutTime(day)] ?? [];
     return activities
-        .map((activity) => CompleteCalenderCard(activity: activity))
+        .map((activity) => CompleteCalendarCard(activity: activity))
         .toList();
   }
 
@@ -125,7 +130,6 @@ class _CalendarViewState extends State<CalendarView> {
 
       dateToActivities.addAll({uniqueDate: activitiesOnThatDate});
     }
-    // print(dateToActivities);
     return dateToActivities;
   }
 }
