@@ -5,66 +5,37 @@ import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
 
+import '../../components/activity_view_card.dart';
+
 class ActivityList extends StatelessWidget {
-
   final List<Activity> activities;
-  final Function onChange;
+  final Function refetchActivities;
 
-  const ActivityList({Key? key, required this.activities, required this.onChange})
+  const ActivityList(
+      {Key? key, required this.activities, required this.refetchActivities})
       : super(key: key);
+
+  Future<void> _onRefresh() async {
+    refetchActivities();
+    return Future.delayed(Duration.zero);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ListView.builder(
+      child: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: ListView.builder(
           itemCount: activities.length,
           itemBuilder: (context, index) {
             final Activity activity = activities[index];
-            return Card(
-              color: activity.doneToday ? Colors.green : Colors.red,
-              child: ListTile(
-                title: Text("${activity.name} ${activity.daysDone.length}"),
-                onLongPress: () async {
-                  var response = await showDialog(
-                    context: context,
-                    builder: (dialogContext) => DeleteConfirmationDialog(
-                      title: "Delete activity",
-                      description:
-                          "This action cannot be undone, are you sure?",
-                    ),
-                  );
-                  if (response is bool && response == true) {
-                    ActivityDbHelper.instance.deleteActivity(activity.id!);
-                  }
-                  onChange();
-                },
-                onTap: () async {
-                  await ActivityDbHelper.instance.toggleDate(
-                    dbDatetime: DbDatetime(
-                      date: DateTime.now(),
-                      activityId: activity.id!,
-                    ),
-                  );
-                  onChange();
-                },
-                trailing: InkWell(
-                  child: GestureDetector(
-                    child: Icon(Icons.edit),
-                    onTap: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ActivityForm.editMode(
-                            editActivity: activity,
-                          ),
-                        ),
-                      );
-                      onChange();
-                    },
-                  ),
-                ),
-              ),
+            return ActivityViewCard(
+              activity: activity,
+              refetchActivities: refetchActivities,
             );
-          }),
+          },
+        ),
+      ),
     );
   }
 }

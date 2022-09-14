@@ -13,6 +13,8 @@ class ActivityView extends StatefulWidget {
 }
 
 class _ActivityViewState extends State<ActivityView> {
+  List<Activity> _fetchedActivities = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,10 +31,10 @@ class _ActivityViewState extends State<ActivityView> {
                     ),
                   );
                 case ConnectionState.done:
-                  List<Activity> activities = snapshot.data as List<Activity>;
+                  _fetchedActivities = snapshot.data as List<Activity>;
                   return ActivityList(
-                    activities: activities,
-                    onChange: () => setState(() {}),
+                    activities: _fetchedActivities,
+                    refetchActivities: () => setState(() {}),
                   );
                 default:
                   return const Center(
@@ -43,14 +45,12 @@ class _ActivityViewState extends State<ActivityView> {
           )
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
           await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ActivityForm(),
           ));
-          print("oi");
           setState(() {});
         },
       ),

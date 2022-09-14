@@ -18,8 +18,6 @@ class _CalendarViewState extends State<CalendarView> {
   DateTime _selectedDay = zeroOutTime(DateTime.now());
   late List<CompleteCalendarCard> _selectedActivities;
 
-  //TODO: manage the two future builders when integration the two views
-
   @override
   Widget build(BuildContext context) {
     return Column(

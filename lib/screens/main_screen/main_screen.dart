@@ -21,10 +21,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screenOptions = const [
-    ActivityView(),
-    CalendarView()
-  ];
+  final List<Widget> _screenOptions = const [ActivityView(), CalendarView()];
 
   _onTapBottom(int index) {
     setState(() {
@@ -36,9 +33,9 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Activities"),
+        title: Text("Em Frente!"),
         centerTitle: true,
-        actions: [
+        actions: [ //TODO: Remove this at some point
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: GestureDetector(
@@ -50,11 +47,7 @@ class _MainScreenState extends State<MainScreen> {
           )
         ],
       ),
-
       body: _screenOptions.elementAt(_selectedIndex),
-
-
-
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
