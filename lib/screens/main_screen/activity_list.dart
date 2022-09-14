@@ -5,12 +5,12 @@ import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
 
-class ActivityView extends StatelessWidget {
+class ActivityList extends StatelessWidget {
 
   final List<Activity> activities;
   final Function onChange;
 
-  const ActivityView({Key? key, required this.activities, required this.onChange})
+  const ActivityList({Key? key, required this.activities, required this.onChange})
       : super(key: key);
 
   @override
