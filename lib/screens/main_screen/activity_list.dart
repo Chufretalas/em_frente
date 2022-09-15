@@ -32,6 +32,7 @@ class ActivityList extends StatelessWidget {
             return ActivityViewCard(
               activity: activity,
               refetchActivities: refetchActivities,
+              isLast: index == activities.length-1,
             );
           },
         ),
