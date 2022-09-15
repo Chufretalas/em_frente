@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/components/complete_calendar_card.dart';
-import 'package:pra_frente_app/db/activity_db_helper.dart';
-import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/utils/zero_out_time.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:pra_frente_app/models/activity.dart';
+
+import 'package:pra_frente_app/utils/fetch_all_activities_by_date.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class _CalendarViewState extends State<CalendarView> {
     return Column(
       children: [
         FutureBuilder(
-          future: _fetchAllActivitiesByDate(),
+          future: fetchAllActivitiesByDate(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
@@ -43,7 +43,7 @@ class _CalendarViewState extends State<CalendarView> {
                   child: Column(
                     children: [
                       TableCalendar(
-                        calendarStyle: CalendarStyle(
+                        calendarStyle: const CalendarStyle(
                             markerDecoration: BoxDecoration(
                                 color: Colors.red, shape: BoxShape.circle)),
                         firstDay: DateTime.utc(2010, 10, 16),
@@ -64,18 +64,19 @@ class _CalendarViewState extends State<CalendarView> {
                           return _getActivitiesByDay(day, calendarActivites);
                         },
                       ),
-                      _selectedActivities.isNotEmpty
-                          ? ListView.builder(
-                              //TODO: if the list is too big the scrolling breaks
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: _selectedActivities.length,
-                              itemBuilder: (context, index) {
-                                return _selectedActivities[index];
-                              },
-                            )
-                          : Center(
-                              child: Text("Nothing was completed that day")),
+                      Expanded(
+                        child: _selectedActivities.isNotEmpty
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: _selectedActivities.length,
+                                itemBuilder: (context, index) {
+                                  return _selectedActivities[index];
+                                },
+                              )
+                            : Center(
+                                child: Text("Nothing was completed that day")),
+                      ),
                     ],
                   ),
                 );
@@ -94,32 +95,14 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   List<CompleteCalendarCard> _getActivitiesByDay(
-      DateTime day, Map<DateTime, List<Activity>> data) {
-    List<Activity> activities = data[zeroOutTime(day)] ?? [];
+    DateTime day,
+    Map<DateTime, List<Activity>> activitiesOnEachDay,
+  ) {
+    List<Activity> activities = activitiesOnEachDay[zeroOutTime(day)] ?? [];
     return activities
         .map((activity) => CompleteCalendarCard(activity: activity))
         .toList();
   }
 
-  Future<Map<DateTime, List<Activity>>> _fetchAllActivitiesByDate() async {
-    List<DbDatetime> allDates = await ActivityDbHelper.instance.getAllDates();
-    List<Activity> allActivities =
-        await ActivityDbHelper.instance.getAllActivities();
-    Set<DateTime> uniqueDates = allDates.map((e) => e.date).toSet();
-    Map<DateTime, List<Activity>> dateToActivities = {};
 
-    for (DateTime uniqueDate in uniqueDates) {
-      List<int> activitiesIdsOnThatDate = allDates
-          .where((dbDate) => dbDate.date == uniqueDate)
-          .map((filteredDbDate) => filteredDbDate.activityId)
-          .toList();
-
-      List<Activity> activitiesOnThatDate = allActivities
-          .where((activity) => activitiesIdsOnThatDate.contains(activity.id))
-          .toList();
-
-      dateToActivities.addAll({uniqueDate: activitiesOnThatDate});
-    }
-    return dateToActivities;
-  }
 }

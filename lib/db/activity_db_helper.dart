@@ -45,6 +45,7 @@ class ActivityDbHelper {
       )
     ''');
 
+    //TODO: change the date field to milliSecondsSinceEpoch so it's easier to implement metrics
     await db.execute('''
       CREATE TABLE $tableD(
         $tableDId INTEGER PRIMARY KEY,
