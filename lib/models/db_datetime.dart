@@ -19,7 +19,7 @@ class DbDatetime {
   Map<String, dynamic> toMap() {
     return {
       ActivityDbHelper.tableDId: dateId,
-      ActivityDbHelper.tableDDate: date.toIso8601String(),
+      ActivityDbHelper.tableDDate: date.millisecondsSinceEpoch,
       ActivityDbHelper.tableDForeign: activityId,
       ActivityDbHelper.tableDUnique: uniqueKey,
     };

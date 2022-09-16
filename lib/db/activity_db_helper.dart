@@ -45,11 +45,10 @@ class ActivityDbHelper {
       )
     ''');
 
-    //TODO: change the date field to milliSecondsSinceEpoch so it's easier to implement metrics
     await db.execute('''
       CREATE TABLE $tableD(
         $tableDId INTEGER PRIMARY KEY,
-        $tableDDate TEXT,
+        $tableDDate INTEGER,
         $tableDForeign INTEGER,
         $tableDUnique TEXT UNIQUE,
 	      FOREIGN KEY("$tableDForeign") REFERENCES $tableA ("$tableAId")ON DELETE CASCADE
@@ -134,7 +133,7 @@ class ActivityDbHelper {
     return List.generate(maps.length, (i) {
       return DbDatetime(
         dateId: maps[i][tableDId],
-        date: DateTime.parse(maps[i][tableDDate]),
+        date: DateTime.fromMillisecondsSinceEpoch(maps[i][tableDDate]),
         activityId: maps[i][tableDForeign],
       );
     });
@@ -147,7 +146,7 @@ class ActivityDbHelper {
     return List.generate(maps.length, (i) {
       return DbDatetime(
         dateId: maps[i][tableDId],
-        date: DateTime.parse(maps[i][tableDDate]),
+        date: DateTime.fromMillisecondsSinceEpoch(maps[i][tableDDate]),
         activityId: maps[i][tableDForeign],
       );
     });
@@ -158,7 +157,7 @@ class ActivityDbHelper {
     int result = await db.delete(
       tableD,
       where: "$tableDForeign = ? AND $tableDDate = ?",
-      whereArgs: [dbDatetime.activityId, dbDatetime.date.toIso8601String()],
+      whereArgs: [dbDatetime.activityId, dbDatetime.date.millisecondsSinceEpoch],
     );
     if (result == 0) {
       // If the delete fails it means the date does not exist, so it gets added
