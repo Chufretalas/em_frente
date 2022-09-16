@@ -6,16 +6,10 @@ import '../db/activity_db_helper.dart';
 import '../models/activity.dart';
 import '../models/db_datetime.dart';
 import '../screens/activity_form.dart';
+import '../utils/constants.dart';
 import 'delete_confirmation_dialog.dart';
 
-const List<Color> BG_COLORS = [
-  Color.fromARGB(255, 80, 123, 145),
-  Color.fromARGB(255, 68, 106, 126),
-  Color.fromARGB(255, 97, 138, 159),
-  Color.fromARGB(255, 77, 128, 155),
-  Color.fromARGB(255, 63, 103, 124),
-  Color.fromARGB(255, 90, 138, 162),
-];
+
 
 class ActivityViewCard extends StatefulWidget {
   final Activity activity;
@@ -44,7 +38,7 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
         child: Material(
           elevation: 8,
           shadowColor: Colors.black87,
-          color: BG_COLORS[Random().nextInt(BG_COLORS.length)],
+          color: BLUEISH_GREY_COLORS[Random().nextInt(BLUEISH_GREY_COLORS.length)],
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
@@ -55,12 +49,12 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   widget.activity.doneToday
-                      ? Icon(
+                      ? const Icon(
                           Icons.check_circle_sharp,
                           color: Color.fromARGB(255, 108, 227, 81),
                           size: 28,
                         )
-                      : Icon(
+                      : const Icon(
                           Icons.cancel_sharp,
                           color: Color.fromARGB(255, 236, 74, 74),
                           size: 28,

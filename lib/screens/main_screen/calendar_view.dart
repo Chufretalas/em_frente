@@ -6,7 +6,10 @@ import 'package:pra_frente_app/models/activity.dart';
 
 import 'package:pra_frente_app/utils/fetch_all_activities_by_date.dart';
 
+import '../../utils/constants.dart';
+
 class CalendarView extends StatefulWidget {
+  //TODO: make this fetch less often, but it hasn't been a problem yet.
   const CalendarView({Key? key}) : super(key: key);
 
   @override
@@ -64,17 +67,38 @@ class _CalendarViewState extends State<CalendarView> {
                           return _getActivitiesByDay(day, calendarActivites);
                         },
                       ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 4),
+                        child: Divider(
+                          indent: 16,
+                          endIndent: 16,
+                          thickness: 4,
+                          color: Colors.cyanAccent,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          "Things completed in ${MONTH_NAMES[_selectedDay.month]} ${_selectedDay.day} of ${_selectedDay.year}",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ),
                       Expanded(
                         child: _selectedActivities.isNotEmpty
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
+                            ? GridView.builder(
+                          padding: const EdgeInsets.only(top: 8, bottom: 20, right: 8, left: 8),
                                 itemCount: _selectedActivities.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 200,
+                                        childAspectRatio: 6 / 2,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 20),
                                 itemBuilder: (context, index) {
                                   return _selectedActivities[index];
                                 },
                               )
-                            : Center(
+                            : const Center(
                                 child: Text("Nothing was completed that day")),
                       ),
                     ],
@@ -103,6 +127,4 @@ class _CalendarViewState extends State<CalendarView> {
         .map((activity) => CompleteCalendarCard(activity: activity))
         .toList();
   }
-
-
 }

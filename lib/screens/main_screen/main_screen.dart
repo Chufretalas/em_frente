@@ -40,19 +40,18 @@ class _MainScreenState extends State<MainScreen> {
         title: Text("Em Frente!"),
         centerTitle: true,
         actions: [
-          //TODO: Remove this at some point
-          DebugAppbarAction(),
+          // DebugAppbarAction(),
         ],
       ),
       body: _screenOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
+            icon: Icon(Icons.list_alt, color: Colors.cyanAccent,),
             label: "Activities",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
+            icon: Icon(Icons.calendar_today_outlined, color: Colors.cyanAccent,),
             label: "Calendar",
           ),
         ],
