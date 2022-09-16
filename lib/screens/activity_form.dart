@@ -53,15 +53,37 @@ class _ActivityFormState extends State<ActivityForm> {
       ),
       body: Column(
         children: [
-          TextField(controller: _activityController),
-          Visibility(
-              visible: _errorVisibility,
-              child: Text(
-                _errorMessage,
-                style: TextStyle(color: Colors.redAccent),
-              )),
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 30.0, bottom: 12, right: 16, left: 16),
+            child: TextField(
+              controller: _activityController,
+              decoration: InputDecoration(
+                label: Text("New activity name"),
+                hintText: "Type here...",
+                errorText: _errorVisibility ? _errorMessage : null,
+                errorStyle: TextStyle(fontSize: 16),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.cyan, width: 2),
+                    borderRadius: BorderRadius.circular(16)),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.cyanAccent, width: 3),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.redAccent, width: 3),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            ),
+          ),
           ElevatedButton(
-            child: const Text("Confirm"),
+            child: const Text(
+              "Confirm",
+              style: TextStyle(fontSize: 16),
+            ),
             onPressed: () async {
               _hideError();
               if (_activityController.text.isNotEmpty) {
@@ -86,6 +108,10 @@ class _ActivityFormState extends State<ActivityForm> {
                 _showError(errorMsg: "The activity name cannot be empty");
               }
             },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.cyanAccent,
+              onPrimary: Colors.black,
+            ),
           ),
         ],
       ),
