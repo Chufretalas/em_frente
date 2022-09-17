@@ -23,20 +23,22 @@ class ActivityList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: ListView.builder(
-          itemCount: activities.length,
-          itemBuilder: (context, index) {
-            final Activity activity = activities[index];
-            return ActivityViewCard(
-              activity: activity,
-              refetchActivities: refetchActivities,
-              isLast: index == activities.length-1,
-            );
-          },
-        ),
-      ),
+      child: activities.isNotEmpty
+          ? RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView.builder(
+                itemCount: activities.length,
+                itemBuilder: (context, index) {
+                  final Activity activity = activities[index];
+                  return ActivityViewCard(
+                    activity: activity,
+                    refetchActivities: refetchActivities,
+                    isLast: index == activities.length - 1,
+                  );
+                },
+              ),
+            )
+          : const Center(child: Text("Click the + button to add new activities")),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pra_frente_app/components/about_app_dialog.dart';
 import 'package:pra_frente_app/components/delete_confirmation_dialog.dart';
 import 'package:pra_frente_app/db/activity_db_helper.dart';
 import 'package:pra_frente_app/debug/debug_appbar_action.dart';
@@ -41,6 +42,16 @@ class _MainScreenState extends State<MainScreen> {
         centerTitle: true,
         actions: [
           // DebugAppbarAction(),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              child: Icon(Icons.info_outline),
+              onTap: () => showDialog(
+                  context: context,
+                  builder: (dialogContext) => const AboutAppDialog(),
+                ),
+            ),
+          )
         ],
       ),
       body: _screenOptions.elementAt(_selectedIndex),

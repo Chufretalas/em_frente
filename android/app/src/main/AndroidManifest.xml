@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="donthave.asite.chufretalas.pra_frente_app">
    <application
-        android:label="pra_frente_app"
+        android:label="Em Frente"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
