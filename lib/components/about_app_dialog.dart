@@ -12,7 +12,7 @@ class AboutAppDialog extends StatelessWidget {
   Future<void> _openGithub() async {
     bool isLaunchable = await canLaunchUrlString(gitHubURL);
     if (isLaunchable) {
-      await launchUrlString(gitHubURL);
+      await launchUrlString(gitHubURL, mode: LaunchMode.externalApplication);
     }
   }
 
