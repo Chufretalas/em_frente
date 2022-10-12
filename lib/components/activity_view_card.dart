@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:pra_frente_app/extensions/datetime_extensions.dart';
 
 import '../db/activity_db_helper.dart';
 import '../models/activity.dart';
@@ -8,8 +9,6 @@ import '../models/db_datetime.dart';
 import '../screens/activity_form.dart';
 import '../utils/constants.dart';
 import 'delete_confirmation_dialog.dart';
-
-
 
 class ActivityViewCard extends StatefulWidget {
   final Activity activity;
@@ -38,12 +37,13 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
         child: Material(
           elevation: 8,
           shadowColor: Colors.black87,
-          color: BLUEISH_GREY_COLORS[Random().nextInt(BLUEISH_GREY_COLORS.length)],
+          color:
+              BLUEISH_GREY_COLORS[Random().nextInt(BLUEISH_GREY_COLORS.length)],
           borderRadius: BorderRadius.circular(16),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             child: Container(
-              padding: EdgeInsets.only(right: 14, left: 14, top: 8, bottom: 8),
+              padding: const EdgeInsets.only(right: 14, left: 14, top: 8, bottom: 8),
               height: 80,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,17 +65,25 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
                       children: [
                         Text(
                           widget.activity.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                            "Days completed: ${widget.activity.daysDone.length}"),
+                        Column(
+                          children: [
+                            const Text("Days completed"),
+                            Text("Total: ${widget.activity.daysDone.length} -- "
+                                "This month: ${widget.activity.timesDoneThisMonth}/${DateTime.now().lengthOfMonth()}"),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                   InkWell(
                     child: GestureDetector(
-                      child: const Icon(Icons.edit, size: 24,),
+                      child: const Icon(
+                        Icons.edit,
+                        size: 24,
+                      ),
                       onTap: () async {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
@@ -111,6 +119,8 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
                   activityId: widget.activity.id!,
                 ),
               );
+              await widget.activity
+                  .fetchTimesDoneThisMonth(month: DateTime.august);
               setState(() {
                 widget.activity.doneToday
                     ? widget.activity.daysDone.removeLast()

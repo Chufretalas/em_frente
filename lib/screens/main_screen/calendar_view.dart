@@ -47,9 +47,20 @@ class _CalendarViewState extends State<CalendarView> {
                     children: [
                       TableCalendar(
                         calendarStyle: const CalendarStyle(
-                            markerDecoration: BoxDecoration(
-                                color: Colors.red, shape: BoxShape.circle)),
+                          markerDecoration: BoxDecoration(
+                              color: Colors.red, shape: BoxShape.circle),
+                          selectedDecoration: BoxDecoration(
+                              color: Colors.cyan, shape: BoxShape.circle),
+                          cellMargin: EdgeInsets.all(2),
+                        ),
+                        rowHeight: 45,
+                        weekendDays: List.empty(),
                         firstDay: DateTime.utc(2010, 10, 16),
+                        calendarFormat: CalendarFormat.month,
+                        daysOfWeekStyle: DaysOfWeekStyle(
+                          weekendStyle: TextStyle(color: Colors.white),
+                          weekdayStyle: TextStyle(color: Colors.white),
+                        ),
                         lastDay: DateTime.utc(2030, 3, 14),
                         focusedDay: _focusedDay,
                         selectedDayPredicate: (day) {
@@ -66,6 +77,14 @@ class _CalendarViewState extends State<CalendarView> {
                         eventLoader: (day) {
                           return _getActivitiesByDay(day, calendarActivites);
                         },
+                        headerStyle: HeaderStyle(
+                          formatButtonVisible: false,
+                          titleCentered: true,
+                          titleTextStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.only(bottom: 4),
@@ -80,13 +99,15 @@ class _CalendarViewState extends State<CalendarView> {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
                           "Things completed in ${MONTH_NAMES[_selectedDay.month]} ${_selectedDay.day} of ${_selectedDay.year}",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                       ),
                       Expanded(
                         child: _selectedActivities.isNotEmpty
                             ? GridView.builder(
-                          padding: const EdgeInsets.only(top: 8, bottom: 20, right: 8, left: 8),
+                                padding: const EdgeInsets.only(
+                                    top: 8, bottom: 20, right: 8, left: 8),
                                 itemCount: _selectedActivities.length,
                                 gridDelegate:
                                     const SliverGridDelegateWithMaxCrossAxisExtent(

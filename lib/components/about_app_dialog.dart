@@ -19,7 +19,7 @@ class AboutAppDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Em Frente V0.3.1"),
+      title: const Text("Em Frente V0.3.2"),
       content: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,

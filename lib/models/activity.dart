@@ -7,6 +7,7 @@ class Activity {
   int? id;
   String name;
   List<DbDatetime> daysDone = List.empty();
+  int timesDoneThisMonth = -1;
   bool doneToday = false;
 
   void setDoneToday() {
@@ -16,6 +17,13 @@ class Activity {
     } else {
       doneToday = false;
     }
+  }
+
+  Future<void> fetchTimesDoneThisMonth({required int month}) async {
+    int times = await ActivityDbHelper.instance
+        .timesCompletedByMonth(activity: this, month: month);
+    timesDoneThisMonth = times;
+    return;
   }
 
   Activity({this.id, required this.name});

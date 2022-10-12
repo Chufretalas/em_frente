@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:pra_frente_app/exceptions/database_query_exception.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
+import 'package:pra_frente_app/utils/zero_out_time.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/activity.dart';
@@ -111,6 +112,20 @@ class ActivityDbHelper {
     );
   }
 
+  Future<int> timesCompletedByMonth(
+      {required Activity activity, required int month}) async {
+    Database db = await instance.database;
+    int thisYear = DateTime.now().year;
+    int lastDayOfMonth = DateTime(thisYear, month + 1, 0).day;
+    var data = await db.rawQuery('''
+      SELECT * FROM $tableD 
+        WHERE $tableDForeign = ${activity.id} AND
+        $tableDDate BETWEEN ${DateTime(thisYear, month, 1).millisecondsSinceEpoch} 
+          AND ${DateTime(thisYear, month, lastDayOfMonth).millisecondsSinceEpoch}
+      ''');
+    return data.length;
+  }
+
   // ========================== Date related methods ========================== //
 
   Future<int> addDate({required DbDatetime date}) async {
@@ -157,7 +172,10 @@ class ActivityDbHelper {
     int result = await db.delete(
       tableD,
       where: "$tableDForeign = ? AND $tableDDate = ?",
-      whereArgs: [dbDatetime.activityId, dbDatetime.date.millisecondsSinceEpoch],
+      whereArgs: [
+        dbDatetime.activityId,
+        dbDatetime.date.millisecondsSinceEpoch
+      ],
     );
     if (result == 0) {
       // If the delete fails it means the date does not exist, so it gets added
