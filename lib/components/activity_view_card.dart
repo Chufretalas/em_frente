@@ -43,7 +43,8 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             child: Container(
-              padding: const EdgeInsets.only(right: 14, left: 14, top: 8, bottom: 8),
+              padding:
+                  const EdgeInsets.only(right: 14, left: 14, top: 8, bottom: 8),
               height: 80,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,7 +121,7 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
                 ),
               );
               await widget.activity
-                  .fetchTimesDoneThisMonth(month: DateTime.august);
+                  .fetchTimesDoneThisMonth(month: DateTime.now().month);
               setState(() {
                 widget.activity.doneToday
                     ? widget.activity.daysDone.removeLast()
