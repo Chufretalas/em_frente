@@ -9,7 +9,6 @@ import 'package:pra_frente_app/debug/debug_page.dart';
 import 'package:pra_frente_app/models/activity.dart';
 import 'package:pra_frente_app/models/db_datetime.dart';
 import 'package:pra_frente_app/screens/activity_form.dart';
-import 'package:pra_frente_app/screens/main_screen/activity_list.dart';
 import 'package:pra_frente_app/screens/main_screen/activity_view.dart';
 import 'package:pra_frente_app/screens/main_screen/calendar_view.dart';
 
@@ -23,7 +22,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screenOptions = const [
+  final List<Widget> _screens = const [
     ActivityView(),
     CalendarView(),
   ];
@@ -44,25 +43,31 @@ class _MainScreenState extends State<MainScreen> {
           // DebugAppbarAction(),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
+            child: InkWell(
               child: Icon(Icons.info_outline),
               onTap: () => showDialog(
-                  context: context,
-                  builder: (dialogContext) => const AboutAppDialog(),
-                ),
+                context: context,
+                builder: (dialogContext) => const AboutAppDialog(),
+              ),
             ),
           )
         ],
       ),
-      body: _screenOptions.elementAt(_selectedIndex),
+      body: _screens.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt, color: Colors.cyanAccent,),
+            icon: Icon(
+              Icons.list_alt,
+              color: Colors.cyanAccent,
+            ),
             label: "Activities",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined, color: Colors.cyanAccent,),
+            icon: Icon(
+              Icons.calendar_today_outlined,
+              color: Colors.cyanAccent,
+            ),
             label: "Calendar",
           ),
         ],

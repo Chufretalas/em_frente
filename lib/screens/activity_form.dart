@@ -92,11 +92,12 @@ class _ActivityFormState extends State<ActivityForm> {
                     editActivity!.name = _activityController.text;
                     await ActivityDbHelper.instance
                         .updateActivity(editActivity!);
+                    Navigator.of(context).pop(editActivity!.name); // returns the new activity name if in edit mode
                   } else {
                     await ActivityDbHelper.instance
                         .addActivity(Activity(name: _activityController.text));
+                    Navigator.of(context).pop();
                   }
-                  Navigator.of(context).pop();
                 } catch (e) {
                   if (e.toString().contains("UNIQUE constraint failed")) {
                     _showError(errorMsg: "This activity already exists");
