@@ -65,13 +65,13 @@ class _CalendarViewState extends State<CalendarView> {
                         onDaySelected: onDaySelected,
                         eventLoader: eventLoader,
                       ),
-                      const Padding(
+                       Padding(
                         padding: EdgeInsets.only(bottom: 4),
                         child: Divider(
                           indent: 16,
                           endIndent: 16,
                           thickness: 4,
-                          color: Colors.cyanAccent,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                       Padding(

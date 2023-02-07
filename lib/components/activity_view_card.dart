@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/components/blue_card.dart';
 import 'package:pra_frente_app/extensions/datetime_extensions.dart';
+import 'package:pra_frente_app/themes/theme_colors.dart';
 
 import '../db/activity_db_helper.dart';
 import '../models/activity.dart';
@@ -94,12 +95,12 @@ class _ActivityViewCardState extends State<ActivityViewCard> {
                 widget.activity.doneToday
                     ? const Icon(
                         Icons.check_circle_sharp,
-                        color: Color.fromARGB(255, 108, 227, 81),
+                        color: ThemeColors.green,
                         size: 28,
                       )
                     : const Icon(
                         Icons.cancel_sharp,
-                        color: Color.fromARGB(255, 236, 74, 74),
+                        color: ThemeColors.red,
                         size: 28,
                       ),
                 Column(

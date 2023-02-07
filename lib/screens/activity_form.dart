@@ -48,6 +48,7 @@ class _ActivityFormState extends State<ActivityForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(_appBarTitle),
         centerTitle: true,
       ),
@@ -59,31 +60,29 @@ class _ActivityFormState extends State<ActivityForm> {
             child: TextField(
               controller: _activityController,
               decoration: InputDecoration(
-                label: Text("New activity name"),
+                label: const Text("New activity name"),
                 hintText: "Type here...",
                 errorText: _errorVisibility ? _errorMessage : null,
-                errorStyle: TextStyle(fontSize: 16),
+                errorStyle: const TextStyle(fontSize: 16),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.cyan, width: 2),
+                    borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.tertiary,
+                        width: 2),
                     borderRadius: BorderRadius.circular(16)),
                 focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Colors.cyanAccent, width: 3),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.tertiary, width: 3),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(color: Colors.redAccent, width: 3),
+                  borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.error, width: 3),
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
             ),
           ),
           ElevatedButton(
-            child: const Text(
-              "Confirm",
-              style: TextStyle(fontSize: 16),
-            ),
             onPressed: () async {
               _hideError();
               if (_activityController.text.isNotEmpty) {
@@ -92,7 +91,8 @@ class _ActivityFormState extends State<ActivityForm> {
                     editActivity!.name = _activityController.text;
                     await ActivityDbHelper.instance
                         .updateActivity(editActivity!);
-                    Navigator.of(context).pop(editActivity!.name); // returns the new activity name if in edit mode
+                    Navigator.of(context).pop(editActivity!
+                        .name); // returns the new activity name if in edit mode
                   } else {
                     await ActivityDbHelper.instance
                         .addActivity(Activity(name: _activityController.text));
@@ -110,8 +110,11 @@ class _ActivityFormState extends State<ActivityForm> {
               }
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.cyanAccent,
-              onPrimary: Colors.black,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+            child: Text(
+              "Confirm",
+              style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSecondaryContainer),
             ),
           ),
         ],

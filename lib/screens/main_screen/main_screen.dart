@@ -37,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text("Em Frente!"),
         centerTitle: true,
         actions: [
@@ -55,18 +56,18 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: _screens.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        items:  [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.list_alt,
-              color: Colors.cyanAccent,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             label: "Activities",
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.calendar_today_outlined,
-              color: Colors.cyanAccent,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             label: "Calendar",
           ),

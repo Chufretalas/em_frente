@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pra_frente_app/models/activity.dart';
+import 'package:pra_frente_app/themes/theme_colors.dart';
 import 'package:pra_frente_app/utils/fetch_activities_and_dates.dart';
 
 import '../../components/activity_view_card.dart';
@@ -49,7 +50,10 @@ class _ActivityViewState extends State<ActivityView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: ThemeColors.white,
+        ),
         onPressed: () async {
           await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ActivityForm(),

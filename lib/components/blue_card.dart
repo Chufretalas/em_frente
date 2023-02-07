@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:pra_frente_app/themes/theme_colors.dart';
 
 import '../utils/constants.dart';
 
@@ -14,7 +15,7 @@ class BlueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Ink(
       decoration: BoxDecoration(
-          color: BLUEISH_GREY_COLORS[Random().nextInt(BLUEISH_GREY_COLORS.length)],
+          color: ThemeColors.dynamicBlueColor,
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: kElevationToShadow[8]
       ),

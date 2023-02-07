@@ -15,11 +15,3 @@ const MONTH_NAMES = {
   12: "December"
 };
 
-const List<Color> BLUEISH_GREY_COLORS = [
-  Color.fromARGB(255, 80, 123, 145),
-  Color.fromARGB(255, 68, 106, 126),
-  Color.fromARGB(255, 97, 138, 159),
-  Color.fromARGB(255, 77, 128, 155),
-  Color.fromARGB(255, 63, 103, 124),
-  Color.fromARGB(255, 90, 138, 162),
-];
